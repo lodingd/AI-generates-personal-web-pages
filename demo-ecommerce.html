@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-commerce Platform - Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); min-height: 100vh; color: #fff; }
+    
+    .header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo { font-size: 24px; font-weight: bold; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links a { margin-left: 30px; color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s; }
+    .nav-links a:hover { color: #fff; }
+    .back-btn { padding: 10px 20px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; color: #fff; cursor: pointer; transition: opacity 0.3s; }
+    .back-btn:hover { opacity: 0.9; }
+
+    .hero { padding: 60px 40px; text-align: center; }
+    .hero h1 { font-size: 48px; margin-bottom: 20px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 800px; margin: 0 auto; }
+
+    .dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; padding: 0 40px 40px; }
+    .card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s, box-shadow 0.3s; }
+    .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2); }
+    .card-icon { width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; }
+    .card-title { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+    .card-value { font-size: 32px; font-weight: bold; }
+    .card-1 .card-icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .card-2 .card-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+    .card-3 .card-icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+    .card-4 .card-icon { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+    .products-section { padding: 40px; }
+    .section-title { font-size: 28px; margin-bottom: 30px; }
+    .products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .product-card { background: rgba(255,255,255,0.05); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.3s; }
+    .product-card:hover { transform: translateY(-5px); }
+    .product-image { height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+    .product-info { padding: 20px; }
+    .product-title { font-size: 18px; margin-bottom: 10px; }
+    .product-price { font-size: 24px; font-weight: bold; color: #43e97b; }
+    .add-cart { margin-top: 15px; padding: 12px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; color: #fff; cursor: pointer; transition: opacity 0.3s; }
+    .add-cart:hover { opacity: 0.9; }
+
+    .orders-section { padding: 40px; }
+    .orders-table { width: 100%; border-collapse: collapse; }
+    .orders-table th, .orders-table td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .orders-table th { color: rgba(255,255,255,0.6); }
+    .status { padding: 5px 15px; border-radius: 20px; font-size: 12px; }
+    .status.pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+    .status.shipped { background: rgba(23, 162, 184, 0.2); color: #17a2b8; }
+    .status.delivered { background: rgba(40, 167, 69, 0.2); color: #28a745; }
+
+    .back-link { position: fixed; bottom: 30px; right: 30px; padding: 15px 30px; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); border-radius: 50px; text-decoration: none; color: #fff; transition: transform 0.3s; }
+    .back-link:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">E-Commerce Platform</div>
+    <div class="nav-links">
+      <a href="#products">Products</a>
+      <a href="#orders">Orders</a>
+      <a href="#analytics">Analytics</a>
+    </div>
+    <button class="back-btn" onclick="window.location.href='index.html#projects'">← 返回项目页</button>
+  </div>
+
+  <div class="hero">
+    <h1>🛒 E-commerce Platform Demo</h1>
+    <p>A comprehensive e-commerce solution with real-time inventory management and secure payment integration.</p>
+  </div>
+
+  <div class="dashboard">
+    <div class="card card-1">
+      <div class="card-icon">💰</div>
+      <div class="card-title">Total Revenue</div>
+      <div class="card-value">$128,430</div>
+    </div>
+    <div class="card card-2">
+      <div class="card-icon">📦</div>
+      <div class="card-title">Orders Today</div>
+      <div class="card-value">156</div>
+    </div>
+    <div class="card card-3">
+      <div class="card-icon">👥</div>
+      <div class="card-title">Active Users</div>
+      <div class="card-value">2,847</div>
+    </div>
+    <div class="card card-4">
+      <div class="card-icon">⭐</div>
+      <div class="card-title">Avg Rating</div>
+      <div class="card-value">4.8</div>
+    </div>
+  </div>
+
+  <div class="products-section" id="products">
+    <h2 class="section-title">Featured Products</h2>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-image">🎧</div>
+        <div class="product-info">
+          <div class="product-title">Wireless Headphones</div>
+          <div class="product-price">$299</div>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-image">💻</div>
+        <div class="product-info">
+          <div class="product-title">Ultrabook Pro</div>
+          <div class="product-price">$1,299</div>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-image">🎮</div>
+        <div class="product-info">
+          <div class="product-title">Gaming Console</div>
+          <div class="product-price">$499</div>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-image">⌚</div>
+        <div class="product-info">
+          <div class="product-title">Smart Watch</div>
+          <div class="product-price">$199</div>
+          <button class="add-cart">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="orders-section" id="orders">
+    <h2 class="section-title">Recent Orders</h2>
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#ORD-001</td>
+          <td>John Smith</td>
+          <td>$299.00</td>
+          <td><span class="status delivered">Delivered</span></td>
+          <td>2024-01-15</td>
+        </tr>
+        <tr>
+          <td>#ORD-002</td>
+          <td>Jane Doe</td>
+          <td>$499.00</td>
+          <td><span class="status shipped">Shipped</span></td>
+          <td>2024-01-14</td>
+        </tr>
+        <tr>
+          <td>#ORD-003</td>
+          <td>Mike Johnson</td>
+          <td>$1,299.00</td>
+          <td><span class="status pending">Pending</span></td>
+          <td>2024-01-14</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

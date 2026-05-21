@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics Dashboard - Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b4e 100%); min-height: 100vh; color: #fff; }
+    
+    .header { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .logo { font-size: 24px; font-weight: bold; background: linear-gradient(90deg, #00d4ff 0%, #7b2cbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .nav-links a { margin-left: 30px; color: rgba(255,255,255,0.7); text-decoration: none; transition: color 0.3s; }
+    .nav-links a:hover { color: #fff; }
+    .back-btn { padding: 10px 20px; background: linear-gradient(90deg, #00d4ff 0%, #7b2cbf 100%); border: none; border-radius: 8px; color: #fff; cursor: pointer; transition: opacity 0.3s; }
+    .back-btn:hover { opacity: 0.9; }
+
+    .hero { padding: 60px 40px; text-align: center; }
+    .hero h1 { font-size: 48px; margin-bottom: 20px; background: linear-gradient(90deg, #00d4ff 0%, #7b2cbf 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 18px; color: rgba(255,255,255,0.7); max-width: 800px; margin: 0 auto; }
+
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 0 40px 40px; }
+    .stat-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255,255,255,0.1); }
+    .stat-icon { font-size: 40px; margin-bottom: 15px; }
+    .stat-value { font-size: 48px; font-weight: bold; margin-bottom: 10px; }
+    .stat-label { color: rgba(255,255,255,0.6); }
+    .stat-change { font-size: 14px; margin-top: 10px; }
+    .stat-change.up { color: #43e97b; }
+    .stat-change.down { color: #f5576c; }
+
+    .charts-section { padding: 0 40px 40px; }
+    .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    .chart-card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255,255,255,0.1); }
+    .chart-title { font-size: 18px; margin-bottom: 20px; }
+    
+    .bar-chart { display: flex; align-items: flex-end; height: 200px; gap: 20px; }
+    .bar { flex: 1; background: linear-gradient(180deg, #00d4ff 0%, #7b2cbf 100%); border-radius: 8px 8px 0 0; transition: height 0.5s; }
+    .bar:nth-child(1) { height: 60%; }
+    .bar:nth-child(2) { height: 80%; }
+    .bar:nth-child(3) { height: 45%; }
+    .bar:nth-child(4) { height: 90%; }
+    .bar:nth-child(5) { height: 70%; }
+    .bar:nth-child(6) { height: 85%; }
+    .bar:nth-child(7) { height: 55%; }
+    .bar-labels { display: flex; justify-content: space-between; margin-top: 10px; color: rgba(255,255,255,0.6); font-size: 12px; }
+
+    .pie-chart { width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(#00d4ff 0deg 120deg, #7b2cbf 120deg 240deg, #43e97b 240deg 360deg); margin: 0 auto; position: relative; }
+    .pie-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #1a1a3e; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .pie-legend { margin-top: 30px; }
+    .legend-item { display: flex; align-items: center; margin-bottom: 10px; }
+    .legend-color { width: 20px; height: 20px; border-radius: 4px; margin-right: 10px; }
+    .legend-color.blue { background: #00d4ff; }
+    .legend-color.purple { background: #7b2cbf; }
+    .legend-color.green { background: #43e97b; }
+
+    .activity-section { padding: 0 40px 40px; }
+    .activity-list { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 30px; border: 1px solid rgba(255,255,255,0.1); }
+    .activity-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 10px; height: 10px; border-radius: 50%; background: #00d4ff; margin-right: 15px; }
+    .activity-text { flex: 1; }
+    .activity-time { color: rgba(255,255,255,0.5); font-size: 14px; }
+
+    .back-link { position: fixed; bottom: 30px; right: 30px; padding: 15px 30px; background: linear-gradient(90deg, #00d4ff 0%, #7b2cbf 100%); border-radius: 50px; text-decoration: none; color: #fff; transition: transform 0.3s; }
+    .back-link:hover { transform: scale(1.05); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Analytics Dashboard</div>
+    <div class="nav-links">
+      <a href="#overview">Overview</a>
+      <a href="#charts">Charts</a>
+      <a href="#activity">Activity</a>
+    </div>
+    <button class="back-btn" onclick="window.location.href='index.html#projects'">← 返回项目页</button>
+  </div>
+
+  <div class="hero">
+    <h1>📊 Analytics Dashboard Demo</h1>
+    <p>Real-time analytics platform with interactive charts and custom report generation.</p>
+  </div>
+
+  <div class="stats-grid" id="overview">
+    <div class="stat-card">
+      <div class="stat-icon">👁️</div>
+      <div class="stat-value">124.8K</div>
+      <div class="stat-label">Page Views</div>
+      <div class="stat-change up">↑ 12.5% from last month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">45.2K</div>
+      <div class="stat-label">Unique Visitors</div>
+      <div class="stat-change up">↑ 8.3% from last month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⏱️</div>
+      <div class="stat-value">4:32</div>
+      <div class="stat-label">Avg Session</div>
+      <div class="stat-change down">↓ 2.1% from last month</div>
+    </div>
+  </div>
+
+  <div class="charts-section" id="charts">
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Weekly Traffic</div>
+        <div class="bar-chart">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+        <div class="bar-labels">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Traffic Sources</div>
+        <div class="pie-chart">
+          <div class="pie-center">65%</div>
+        </div>
+        <div class="pie-legend">
+          <div class="legend-item"><div class="legend-color blue"></div><span>Direct</span><span style="margin-left:auto;">33%</span></div>
+          <div class="legend-item"><div class="legend-color purple"></div><span>Organic</span><span style="margin-left:auto;">42%</span></div>
+          <div class="legend-item"><div class="legend-color green"></div><span>Referral</span><span style="margin-left:auto;">25%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="activity-section" id="activity">
+    <h2 style="font-size:24px;margin-bottom:20px;">Real-time Activity</h2>
+    <div class="activity-list">
+      <div class="activity-item"><div class="activity-dot"></div><div class="activity-text">New user registered from New York</div><div class="activity-time">2 min ago</div></div>
+      <div class="activity-item"><div class="activity-dot"></div><div class="activity-text">Purchase completed: $299.00</div><div class="activity-time">5 min ago</div></div>
+      <div class="activity-item"><div class="activity-dot"></div><div class="activity-text">Blog post published</div><div class="activity-time">12 min ago</div></div>
+      <div class="activity-item"><div class="activity-dot"></div><div class="activity-text">Email campaign sent to 1,200 subscribers</div><div class="activity-time">28 min ago</div></div>
+      <div class="activity-item"><div class="activity-dot"></div><div class="activity-text">Server backup completed successfully</div><div class="activity-time">1 hour ago</div></div>
+    </div>
+  </div>
+
+</body>
+</html>
